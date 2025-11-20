@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENG3082 음성 평가 실험</title>
+  <link rel="stylesheet" href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css">
+  <script src="https://unpkg.com/jspsych@8.0.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-preload@2.0.0"></script>
+  <script src="https://unpkg.com/@jspsych/plugin-survey-html-form@2.0.0"></script>
+  <style>
+    body { margin: 0; padding: 20px; font-family: 'Noto Sans KR', Arial, sans-serif; background-color: #f4f4f4; }
+    #jspsych-target { max-width: 900px; margin: 0 auto; background: #fff; padding: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); border-radius: 8px; }
+    .stimulus-image { max-width: 300px; max-height: 300px; width: auto; height: auto; margin: 0 auto 10px auto; display: block; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .price-tag { font-size: 1.3rem; font-weight: bold; color: #333; margin-bottom: 15px; }
+    audio { width: 100%; max-width: 400px; margin-bottom: 20px; }
+    .survey-section { border-top: 2px solid #eee; padding-top: 20px; margin-top: 20px; text-align: left; }
+    .survey-section h3 { margin-bottom: 15px; font-size: 1.1rem; color: #333; border-left: 4px solid #007bff; padding-left: 10px; }
+    .question-row { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px dashed #eee; }
+    .question-label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 0.95rem; }
+    .likert-container { display: flex; justify-content: space-between; align-items: center; max-width: 600px; }
+    .likert-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #666; margin-top: 5px; max-width: 600px; }
+    input[type="range"] { width: 100%; }
+    input[type="number"], input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+    .radio-group label { margin-right: 15px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <div id="jspsych-target"></div>
+   
+  <script>
+    /******************************************************
+     * ENG3082 음성 평가 실험 (Ver 6.0 - ID 복구 완료)
+     ******************************************************/
+
+    console.log('Script starting...');
+
+    // ▼▼▼▼▼▼▼▼ [설정 수정 구간] ▼▼▼▼▼▼▼▼
+    // 링크 4개를 만들 때 여기를 '1ENG3082', '2ENG3082' 등으로 바꾸세요.
+    const EXPERIMENT_PREFIX = '1ENG3082'; 
+    // ▲▲▲▲▲▲▲▲ [설정 수정 구간] ▲▲▲▲▲▲▲▲
+
+    const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzYmiLW6E3pMqeDiXVaBWOAcDa4_-wgbVXneHvDiCQui0i0Rjd-IHjqnN9QPx2gq0K9/exec';
+
+    // [중요] 1a, 1b ID가 여기에 정의되어 있습니다.
+    const RAW_STIMULI = [
+      { id: '1a', file: 'ganadi_cute.wav',      image: 'ganadi_doll.jpeg',  price: '4,900' },
+      { id: '1b', file: 'ganadi_neut.wav',      image: 'ganadi_doll.jpeg',  price: '4,900' },
+      { id: '1c', file: 'ganadi_cute.wav',      image: 'ganadi_pouch.jpeg', price: '39,000' },
+      { id: '1d', file: 'ganadi_neut.wav',      image: 'ganadi_pouch.jpeg', price: '39,000' },
+      
+      { id: '2a', file: 'labubu_cute.wav',      image: 'labubu.jpeg',       price: '42,200' },
+      { id: '2b', file: 'labubu_neut.wav',      image: 'labubu.jpeg',       price: '42,200' },
+      { id: '2c', file: 'labubu_cute.wav',      image: 'labubu.jpeg',       price: '42,200' },
+      { id: '2d', file: 'labubu_neut.wav',      image: 'labubu.jpeg',       price: '42,200' },
+      
+      { id: '3a', file: 'ham_cute.wav',         image: 'ham_fast.jpeg',     price: '2,900' },
+      { id: '3b', file: 'ham_neut.wav',         image: 'ham_fast.jpeg',     price: '2,900' },
+      { id: '3c', file: 'ham_cute.wav',         image: 'ham_highend.jpeg',  price: '21,900' },
+      { id: '3d', file: 'ham_neut.wav',         image: 'ham_highend.jpeg',  price: '21,900' },
+      
+      { id: '4a', file: 'buldak_cute.wav',      image: 'buldak.jpeg',       price: '1,100' },
+      { id: '4b', file: 'buldak_neutral.wav',   image: 'buldak.jpeg',       price: '1,100' },
+      { id: '4c', file: 'buldak_cute.wav',      image: 'buldak.jpeg',       price: '1,100' },
+      { id: '4d', file: 'buldak_neutral.wav',   image: 'buldak.jpeg',       price: '1,100' },
+      
+      { id: '5a', file: 'nongdam_cute.wav',     image: 'nongdam.jpeg',      price: '7,900' },
+      { id: '5b', file: 'bburing_neut.wav',     image: 'bburing.jpeg',      price: '23,500' }
+    ];
+
+    function createLikertRow(name, question) {
+      return `
+        <div class="question-row">
+          <span class="question-label">${question}</span>
+          <div class="likert-container">
+            <span>1</span>
+            <input type="range" name="${name}" min="1" max="7" step="1" required>
+            <span>7</span>
+          </div>
+          <div class="likert-labels">
+            <span>전혀 그렇지 않다</span>
+            <span>매우 그렇다</span>
+          </div>
+        </div>
+      `;
+    }
+
+    /* ===== INIT JSPSYCH ===== */
+    let jsPsych;
+    try {
+      jsPsych = initJsPsych({
+        display_element: 'jspsych-target',
+        on_finish: async () => {
+          console.log('Experiment finished');
+          const ok = await uploadAllRowsToGoogle();
+          if (!ok) {
+            const csv = jsPsych.data.get().csv();
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; 
+            a.download = 'data_backup.csv';
+            a.textContent = '데이터 업로드 실패: CSV 다운로드';
+            a.style.display = 'block';
+            a.style.margin = '20px auto';
+            a.style.textAlign = 'center';
+            a.style.fontSize = '1.2rem';
+            a.style.color = 'red';
+            document.body.appendChild(a);
+          }
+        }
+      });
+      
+      const participant_id = `${EXPERIMENT_PREFIX}-${jsPsych.randomization.randomID(5)}`;
+      jsPsych.data.addProperties({ participant_id: participant_id });
+
+    } catch (error) {
+      console.error('Init error:', error);
+    }
+
+    /* ===== PRELOAD ===== */
+    const preload = {
+      type: jsPsychPreload,
+      audio: RAW_STIMULI.map(s => s.file),
+      images: RAW_STIMULI.map(s => s.image)
+    };
+
+    /* ===== SCREENS ===== */
+    const welcome = {
+      type: jsPsychHtmlButtonResponse,
+      // [확인] Ver 6.0이 보여야 합니다.
+      stimulus: `<h2>oENG3082 음성 평가 실험</h2>
+                 <p style="color:blue; font-weight:bold;">Ver 6.0 / ID: ${EXPERIMENT_PREFIX}</p>
+                 <p>본 실험은 이미지를 보며 소리를 들은 다음 제품에 대한 생각과 느낌을 평가하는 과제입니다.</p>
+                 <p>가능하면 이어폰이나 헤드폰을 착용해 주십시오. 원활한 진행을 위해 무음 모드는 해제해 주세요.</p>`,
+      choices: ['시작하기']
+    };
+
+    const end_screen = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: `<h2>실험 종료</h2>
+                 <p>모든 설문이 완료되었습니다. 데이터가 저장 중입니다. 종료 버튼을 눌러주세요.</p>`,
+      choices: ['종료']
+    };
+
+    /* ===== MAIN TRIAL GENERATION ===== */
+    const generated_trials = RAW_STIMULI.map(item => {
+      return {
+        type: jsPsychSurveyHtmlForm,
+        preamble: `
+          <div style="text-align:center;">
+            <img src="${item.image}" class="stimulus-image" alt="product" 
+                 onerror="this.style.display='none'; this.previousElementSibling.innerText='❌ 로드 실패: ${item.image}';">
+            <div class="price-tag">가격: ${item.price}원</div>
+            <audio controls autoplay src="${item.file}"></audio>
+            <p style="font-size:0.9rem; color:#666;">재생 버튼을 눌러 소리를 다시 들을 수 있습니다.</p>
+          </div>
+        `,
+        html: `
+          <div class="survey-section">
+            <h3>구매 관련 질문</h3>
+            ${createLikertRow('purchase_intent', '지금 이 제품을 구매하고 싶다.')}
+            <div class="question-row">
+              <span class="question-label">지금 구매하시겠습니까?</span>
+              <div class="radio-group">
+                <label><input type="radio" name="purchase_choice" value="yes" required> 예</label>
+                <label><input type="radio" name="purchase_choice" value="no" required> 아니오</label>
+              </div>
+            </div>
+            <div class="question-row">
+              <span class="question-label">이 제품에 지불하고자 하는 최대 금액을 입력하세요 (단위: 원).</span>
+              <input type="number" name="wtp" placeholder="예: 15000" required style="width: 150px;"> 원
+            </div>
+          </div>
+
+          <div class="survey-section">
+            <h3>인지 평가 및 조작 점검</h3>
+            ${createLikertRow('eval_serious', '이 음성은 진지하다.')}
+            ${createLikertRow('eval_cute', '이 음성은 귀엽다.')}
+            ${createLikertRow('eval_funny', '이 음성은 재미있다.')}
+            ${createLikertRow('meme_salience', '밈(Meme)처럼 느껴졌다.')}
+            ${createLikertRow('meme_familiarity', '이 밈을 이전에 본 적이 있다.')}
+            ${createLikertRow('fit', '이 음성의 분위기와 톤은 이 제품과 잘 맞는다.')}
+          </div>
+        `,
+        button_label: '다음',
+        // [핵심 수정] stimulus_id를 확실하게 저장합니다.
+        data: {
+          task: 'main_rating',
+          stimulus_id:   item.id,    // <-- 1a, 1b 저장
+          stimulus_file: item.file,
+          image_file:    item.image,
+          displayed_price: item.price
+        },
+        on_finish: (data) => { }
+      };
+    });
+
+    const trial_block = {
+      timeline: generated_trials,
+      randomize_order: true
+    };
+
+    /* ===== FINAL SURVEY ===== */
+    const final_survey = {
+      type: jsPsychSurveyHtmlForm,
+      preamble: '<h2>통제 변수 및 배경 설문</h2>',
+      html: `
+        <div class="survey-section">
+          <h3>평소 소비 및 행동 습관</h3>
+          ${createLikertRow('habit_doll', '(all) 평소 인형 혹은 키링 제품을 얼마나 자주 구매합니까?')}
+          ${createLikertRow('habit_pouch', '(1c, 1d) 평소 노트북 또는 태블릿 파우치를 얼마나 자주 구매합니까?')}
+          ${createLikertRow('habit_doll_2', '(2a~2d) 평소 인형 혹은 키링 제품을 얼마나 자주 구매합니까? (추가)')}
+          ${createLikertRow('habit_fastfood', '(3a, 3b) 평소 패스트푸드(햄버거)를 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_burger', '(3c, 3d) 평소 수제버거를 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_ramen', '(4a~4d) 평소 볶음 라면을 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_chicken', '(all) 평소 프랜차이즈 치킨을 얼마나 자주 섭취합니까?')}
+          <hr style="margin: 20px 0; border:0; border-top:1px solid #ddd;">
+          ${createLikertRow('meme_usage', '평소 인터넷 밈(Meme)을 얼마나 자주 접하고 사용합니까?')}
+        </div>
+        <div class="survey-section">
+          <h3>참가자 정보</h3>
+          <div class="question-row"><span class="question-label">출생연도 (4자리)</span><input type="text" name="birth_year" placeholder="예: 1998" pattern="[0-9]{4}" required></div>
+          <div class="question-row"><span class="question-label">나이 (만)</span><input type="number" name="age" placeholder="예: 25" required style="width:80px;"></div>
+          <div class="question-row">
+            <span class="question-label">성별</span>
+            <div class="radio-group">
+              <label><input type="radio" name="gender" value="남" required> 남성</label>
+              <label><input type="radio" name="gender" value="여" required> 여성</label>
+            </div>
+          </div>
+        </div>
+        <div class="survey-section" style="background-color: #f9f9f9; padding: 15px; border-radius: 5px;">
+          <h3>경품 응모 (선택)</h3>
+          <div class="question-row" style="border-bottom: none;">
+            <span class="question-label">상품 추첨을 원하시면, 전화번호를 입력해 주세요.</span>
+            <input type="text" name="phone" placeholder="예: 010-0000-0000" style="width: 200px;">
+          </div>
+        </div>
+      `,
+      button_label: '제출 및 종료',
+      data: { task: 'final_survey' },
+      on_finish: (data) => { data.user_agent = navigator.userAgent; }
+    };
+
+    if (jsPsych) {
+      jsPsych.run([preload, welcome, trial_block, final_survey, end_screen]);
+    }
+
+    /* ===== DATA UPLOAD FUNCTION ===== */
+    async function uploadAllRowsToGoogle() {
+      if (!GAS_ENDPOINT) return false;
+      try {
+        const allData = jsPsych.data.get().values();
+        
+        const total_time_ms = jsPsych.getTotalTime();
+        const total_time_min = (total_time_ms / 60000).toFixed(2);
+
+        const finalDataObj = allData.find(d => d.task === 'final_survey');
+        const finalResp = finalDataObj ? finalDataObj.response : {};
+        
+        const rows = allData.filter(d => d.task === 'main_rating').map(d => {
+            const resp = d.response || {};
+            
+            // [최종 전송 목록]
+            // 여기에 stimulus_id가 포함되어 있는지 확인하세요.
+            return {
+              participant_id:   d.participant_id,
+              total_time_min:   total_time_min,   
+              
+              trial_index:      d.trial_index,
+              stimulus_id:      d.stimulus_id,    // [ID 포함됨]
+              stimulus:         d.stimulus_file,
+              image:            d.image_file,
+              price:            d.displayed_price,
+              
+              pur_intent:       resp.purchase_intent || '',
+              pur_choice:       resp.purchase_choice || '',
+              pur_wtp:          resp.wtp || '',
+              
+              eval_serious:     resp.eval_serious || '',
+              eval_cute:        resp.eval_cute || '',
+              eval_funny:       resp.eval_funny || '',
+              
+              meme_salience:    resp.meme_salience || '',
+              meme_familiar:    resp.meme_familiarity || '',
+              fit:              resp.fit || '',
+              
+              habit_doll:       finalResp.habit_doll || '',
+              habit_pouch:      finalResp.habit_pouch || '',
+              habit_fastfood:   finalResp.habit_fastfood || '',
+              habit_burger:     finalResp.habit_burger || '',
+              habit_ramen:      finalResp.habit_ramen || '',
+              habit_chicken:    finalResp.habit_chicken || '',
+              meme_usage:       finalResp.meme_usage || '',
+              
+              birth_year:       finalResp.birth_year || '',
+              age:              finalResp.age || '',
+              gender:           finalResp.gender || '',
+              phone:            finalResp.phone || '',
+              
+              trial_time:       d.time_elapsed
+            };
+          });
+
+        if (rows.length === 0) return true;
+        
+        await fetch(GAS_ENDPOINT, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(rows)
+        });
+        console.log('Upload success');
+        return true;
+      } catch (e) {
+        console.error('Upload failed:', e);
+        return false;
+      }
+    }
+  </script>
+</body>
+</html>
