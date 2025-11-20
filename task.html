@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ENG3082 음성 평가 실험</title>
+  <title>4ENG3082 음성 평가 실험</title>
   <link rel="stylesheet" href="https://unpkg.com/jspsych@8.0.0/css/jspsych.css">
   <script src="https://unpkg.com/jspsych@8.0.0"></script>
   <script src="https://unpkg.com/@jspsych/plugin-html-button-response@2.0.0"></script>
@@ -38,35 +38,24 @@
 
     // ▼▼▼▼▼▼▼▼ [설정 수정 구간] ▼▼▼▼▼▼▼▼
     // 링크 4개를 만들 때 여기를 '1ENG3082', '2ENG3082' 등으로 바꾸세요.
-    const EXPERIMENT_PREFIX = '1ENG3082'; 
+    const EXPERIMENT_PREFIX = '4ENG3082'; 
     // ▲▲▲▲▲▲▲▲ [설정 수정 구간] ▲▲▲▲▲▲▲▲
 
     const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzYmiLW6E3pMqeDiXVaBWOAcDa4_-wgbVXneHvDiCQui0i0Rjd-IHjqnN9QPx2gq0K9/exec';
 
     // [중요] 1a, 1b ID가 여기에 정의되어 있습니다.
     const RAW_STIMULI = [
-      { id: '1a', file: 'ganadi_cute.wav',      image: 'ganadi_doll.jpeg',  price: '4,900' },
-      { id: '1b', file: 'ganadi_neut.wav',      image: 'ganadi_doll.jpeg',  price: '4,900' },
-      { id: '1c', file: 'ganadi_cute.wav',      image: 'ganadi_pouch.jpeg', price: '39,000' },
-      { id: '1d', file: 'ganadi_neut.wav',      image: 'ganadi_pouch.jpeg', price: '39,000' },
-      
-      { id: '2a', file: 'labubu_cute.wav',      image: 'labubu.jpeg',       price: '42,200' },
-      { id: '2b', file: 'labubu_neut.wav',      image: 'labubu.jpeg',       price: '42,200' },
-      { id: '2c', file: 'labubu_cute.wav',      image: 'labubu.jpeg',       price: '42,200' },
-      { id: '2d', file: 'labubu_neut.wav',      image: 'labubu.jpeg',       price: '42,200' },
-      
-      { id: '3a', file: 'ham_cute.wav',         image: 'ham_fast.jpeg',     price: '2,900' },
-      { id: '3b', file: 'ham_neut.wav',         image: 'ham_fast.jpeg',     price: '2,900' },
-      { id: '3c', file: 'ham_cute.wav',         image: 'ham_highend.jpeg',  price: '21,900' },
-      { id: '3d', file: 'ham_neut.wav',         image: 'ham_highend.jpeg',  price: '21,900' },
-      
       { id: '4a', file: 'buldak_cute.wav',      image: 'buldak.jpeg',       price: '1,100' },
-      { id: '4b', file: 'buldak_neutral.wav',   image: 'buldak.jpeg',       price: '1,100' },
-      { id: '4c', file: 'buldak_cute.wav',      image: 'buldak.jpeg',       price: '1,100' },
-      { id: '4d', file: 'buldak_neutral.wav',   image: 'buldak.jpeg',       price: '1,100' },
-      
+     
       { id: '5a', file: 'nongdam_cute.wav',     image: 'nongdam.jpeg',      price: '7,900' },
-      { id: '5b', file: 'bburing_neut.wav',     image: 'bburing.jpeg',      price: '23,500' }
+
+      { id: '3b', file: 'ham_neut.wav',         image: 'ham_fast.jpeg',     price: '2,900' },
+      
+      { id: '2c', file: 'labubu_cute.wav',      image: 'labubu.jpeg',       price: '42,200' },
+
+      { id: '5b', file: 'bburing_neut.wav',     image: 'bburing.jpeg',      price: '23,500' },
+      
+      { id: '1d', file: 'ganadi_neut.wav',      image: 'ganadi_pouch.jpeg', price: '39,000' }
     ];
 
     function createLikertRow(name, question) {
@@ -130,7 +119,7 @@
     const welcome = {
       type: jsPsychHtmlButtonResponse,
       // [확인] Ver 6.0이 보여야 합니다.
-      stimulus: `<h2>oENG3082 음성 평가 실험</h2>
+      stimulus: `<h2>4ENG3082 음성 평가 실험</h2>
                  <p style="color:blue; font-weight:bold;">Ver 6.0 / ID: ${EXPERIMENT_PREFIX}</p>
                  <p>본 실험은 이미지를 보며 소리를 들은 다음 제품에 대한 생각과 느낌을 평가하는 과제입니다.</p>
                  <p>가능하면 이어폰이나 헤드폰을 착용해 주십시오. 원활한 진행을 위해 무음 모드는 해제해 주세요.</p>`,
@@ -209,13 +198,11 @@
       html: `
         <div class="survey-section">
           <h3>평소 소비 및 행동 습관</h3>
-          ${createLikertRow('habit_doll', '(all) 평소 인형 혹은 키링 제품을 얼마나 자주 구매합니까?')}
-          ${createLikertRow('habit_pouch', '(1c, 1d) 평소 노트북 또는 태블릿 파우치를 얼마나 자주 구매합니까?')}
-          ${createLikertRow('habit_doll_2', '(2a~2d) 평소 인형 혹은 키링 제품을 얼마나 자주 구매합니까? (추가)')}
-          ${createLikertRow('habit_fastfood', '(3a, 3b) 평소 패스트푸드(햄버거)를 얼마나 자주 섭취합니까?')}
-          ${createLikertRow('habit_burger', '(3c, 3d) 평소 수제버거를 얼마나 자주 섭취합니까?')}
-          ${createLikertRow('habit_ramen', '(4a~4d) 평소 볶음 라면을 얼마나 자주 섭취합니까?')}
-          ${createLikertRow('habit_chicken', '(all) 평소 프랜차이즈 치킨을 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_doll', '평소 인형 혹은 키링 제품을 얼마나 자주 구매합니까?')}
+          ${createLikertRow('habit_pouch', '평소 노트북 또는 태블릿 파우치를 얼마나 자주 구매합니까?')}
+          ${createLikertRow('habit_fastfood', '평소 패스트푸드(햄버거)를 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_ramen', '평소 볶음 라면을 얼마나 자주 섭취합니까?')}
+          ${createLikertRow('habit_chicken', '평소 프랜차이즈 치킨을 얼마나 자주 섭취합니까?')}
           <hr style="margin: 20px 0; border:0; border-top:1px solid #ddd;">
           ${createLikertRow('meme_usage', '평소 인터넷 밈(Meme)을 얼마나 자주 접하고 사용합니까?')}
         </div>
